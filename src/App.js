@@ -11,10 +11,13 @@ export default class App extends Component {
         super();
         this.state = {
             gameBoard: [
-                ' ',' ',' ',
-                ' ',' ',' ',
-                ' ',' ',' '
+                ' ',' ',' ',' ',' ',
+                ' ',' ',' ',' ',' ',
+                ' ',' ',' ',' ',' ',
+                ' ',' ',' ',' ',' ',
+                ' ',' ',' ',' ',' ',
             ],
+
             winner: null,
             turn: 'x',
             maxPlayer :'x',
@@ -25,9 +28,11 @@ export default class App extends Component {
     resetBoard(){
         this.setState({
             gameBoard: [
-                ' ',' ',' ',
-                ' ',' ',' ',
-                ' ',' ',' '
+                ' ',' ',' ',' ',' ',
+                ' ',' ',' ',' ',' ',
+                ' ',' ',' ',' ',' ',
+                ' ',' ',' ',' ',' ',
+                ' ',' ',' ',' ',' ',
             ],
             winner: null,
             turn: 'x',
@@ -39,21 +44,25 @@ export default class App extends Component {
 
     tie(board){
         var moves = board.join('').replace(/ /g, '');
-        if(moves.length == 9){
+        if(moves.length == 25){
             return true;
         }
         return false;
     }
     winner(board,player) {
         if (
-            (board[0] === player && board[1] === player && board[2] === player) ||
-            (board[3] === player && board[4] === player && board[5] === player) ||
-            (board[6] === player && board[7] === player && board[8] === player) ||
-            (board[0] === player && board[3] === player && board[6] === player) ||
-            (board[1] === player && board[4] === player && board[7] === player) ||
-            (board[2] === player && board[5] === player && board[8] === player) ||
-            (board[0] === player && board[4] === player && board[8] === player) ||
-            (board[2] === player && board[4] === player && board[6] === player)
+            (board[0] === player && board[1] === player && board[2] === player && board[3] === player && board[4] === player) ||
+            (board[5] === player && board[6] === player && board[7] === player && board[8] === player && board[9] === player) ||
+            (board[10] === player && board[11] === player && board[12] === player && board[13] === player && board[14] === player) ||
+            (board[15] === player && board[16] === player && board[17] === player && board[18] === player && board[19] === player) ||
+            (board[20] === player && board[21] === player && board[22] === player && board[23] === player && board[24] === player) ||
+            (board[0] === player && board[5] === player && board[10] === player && board[15] === player && board[20] === player) ||
+            (board[1] === player && board[6] === player && board[11] === player && board[16] === player && board[21] === player) ||
+            (board[2] === player && board[7] === player && board[12] === player && board[17] === player && board[22] === player) ||
+            (board[3] === player && board[8] === player && board[13] === player && board[18] === player && board[23] === player) ||
+            (board[4] === player && board[9] === player && board[14] === player && board[19] === player && board[24] === player) ||
+            (board[0] === player && board[6] === player && board[12] === player && board[18] === player && board[24] === player) ||
+            (board[4] === player && board[8] === player && board[12] === player && board[16] === player && board[20] === player)
         ) {
             return true;
         } else {
@@ -181,6 +190,8 @@ export default class App extends Component {
             gameBoard : currentGameBoard
         });
     }
+
+
     render(){
         return (
             <div className="container">
