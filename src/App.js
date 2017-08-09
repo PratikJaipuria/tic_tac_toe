@@ -16,7 +16,9 @@ export default class App extends Component {
                 ' ',' ',' '
             ],
             winner: null,
-            turn: 'x'
+            turn: 'x',
+            maxPlayer :'x',
+            minPlayer : 'o'
         }
     }
 
@@ -28,77 +30,34 @@ export default class App extends Component {
                 ' ',' ',' '
             ],
             winner: null,
-            turn: 'x'
+            turn: 'x',
+            maxPlayer :'x',
+            minPlayer : 'o'
         });
     }
 
-    updateBoard(loc, player) {
-        //Game Over!
-        console.log(this.state.winner, this.state.turn, this.state.gameBoard);
-        if(this.state.winner !== null) {
-            //make game over component visible
-            console.log("Winner", this.state.winner);
-            return;
+
+    winner(board,player) {
+        if (
+            (board[0] === player && board[1] === player && board[2] === player) ||
+            (board[3] === player && board[4] === player && board[5] === player) ||
+            (board[6] === player && board[7] === player && board[8] === player) ||
+            (board[0] === player && board[3] === player && board[6] === player) ||
+            (board[1] === player && board[4] === player && board[7] === player) ||
+            (board[2] === player && board[5] === player && board[8] === player) ||
+            (board[0] === player && board[4] === player && board[8] === player) ||
+            (board[2] === player && board[4] === player && board[6] === player)
+        ) {
+            return true;
+        } else {
+            return null;
         }
-        if(this.state.gameBoard[loc]=== 'x' || this.state.gameBoard[loc]=== 'o'){
-            //invalid move
-            return;
-        }
-        let currentGameBoard = this.state.gameBoard;
-        currentGameBoard.splice(loc, 1, this.state.turn);
-        this.setState({gameBoard: currentGameBoard}, function(){
-            //Check if there is a winner or draw
-            var moves = this.state.gameBoard.join('').replace(/ /g,'');
-            console.log('Moves:', moves, 'Winner:', this.state.winner);
-            if(moves.length === 9) {
-                this.setState({winner: 'd'});
-                //Make game over component visible
-                return;
-            } else {
-                var topRow = this.state.gameBoard[0] + this.state.gameBoard[1] + this.state.gameBoard[2];
-                if(topRow.match(/xxx|ooo/)){
-                    this.setState({winner: this.state.turn});
-                    return;
-                }
-                var middleRow = this.state.gameBoard[3] + this.state.gameBoard[4] + this.state.gameBoard[5];
-                if(middleRow.match(/xxx|ooo/)){
-                    this.setState({winner: this.state.turn});
-                    return;
-                }
-                var bottomRow = this.state.gameBoard[6] + this.state.gameBoard[7] + this.state.gameBoard[8];
-                if(bottomRow.match(/xxx|ooo/)){
-                    this.setState({winner: this.state.turn});
-                    return;
-                }
-                var leftCol = this.state.gameBoard[0] + this.state.gameBoard[3] + this.state.gameBoard[6];
-                if(leftCol.match(/xxx|ooo/)){
-                    this.setState({winner: this.state.turn});
-                    return;
-                }
-                var middleCol = this.state.gameBoard[1] + this.state.gameBoard[4] + this.state.gameBoard[7];
-                if(middleCol.match(/xxx|ooo/)){
-                    this.setState({winner: this.state.turn});
-                    return;
-                }
-                var rightCol = this.state.gameBoard[2] + this.state.gameBoard[5] + this.state.gameBoard[8];
-                if(rightCol.match(/xxx|ooo/)){
-                    this.setState({winner: this.state.turn});
-                    return;
-                }
-                var leftDiag = this.state.gameBoard[0] + this.state.gameBoard[4] + this.state.gameBoard[8];
-                if(leftDiag.match(/xxx|ooo/)){
-                    this.setState({winner: this.state.turn});
-                    return;
-                }
-                var rightDiag = this.state.gameBoard[2] + this.state.gameBoard[4] + this.state.gameBoard[6];
-                if(rightDiag.match(/xxx|ooo/)){
-                    this.setState({winner: this.state.turn});
-                    return;
-                }
-                this.setState({turn: (this.state.turn === 'x') ? 'o' : 'x' });
-            }
-        }, this);
     }
+
+    copyBoard
+
+
+
 
     render(){
         return (

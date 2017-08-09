@@ -9,3 +9,8 @@
     line-height: 150px;
 
 }
+
+p{
+    margin: 0;
+    padding: 0;
+}

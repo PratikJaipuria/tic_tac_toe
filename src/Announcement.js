@@ -6,6 +6,7 @@ export default class Announcement extends Component {
         return(
             <div className={this.props.winner ? 'visible' : 'hidden'}>
                 <h2>Game Over</h2>
+                <p>{this.props.winner} wins</p>
             </div>
         )
     }
