@@ -11,11 +11,14 @@ export default class App extends Component {
         super();
         this.state = {
             gameBoard: [
-                ' ',' ',' ',' ',' ',
-                ' ',' ',' ',' ',' ',
-                ' ',' ',' ',' ',' ',
-                ' ',' ',' ',' ',' ',
-                ' ',' ',' ',' ',' ',
+                ' ',' ',' ',' ',' ',' ',' ',' ',' '
+                ,' ',
+                ' ',' ',' ',
+                ' ',' ',
+                ' ',' ',' ',
+                ' ',' ',
+                ' ',' ',' ',
+                ' ',' '
             ],
 
             winner: null,
@@ -28,11 +31,14 @@ export default class App extends Component {
     resetBoard(){
         this.setState({
             gameBoard: [
+                // ' ',' ',' ',
+                // ' ',' ',' ',
+                // ' ',' ',' '
                 ' ',' ',' ',' ',' ',
                 ' ',' ',' ',' ',' ',
                 ' ',' ',' ',' ',' ',
                 ' ',' ',' ',' ',' ',
-                ' ',' ',' ',' ',' ',
+                ' ',' ',' ',' ',' '
             ],
             winner: null,
             turn: 'x',
@@ -44,13 +50,22 @@ export default class App extends Component {
 
     tie(board){
         var moves = board.join('').replace(/ /g, '');
-        if(moves.length == 25){
+        if(moves.length === 25){
             return true;
         }
         return false;
     }
     winner(board,player) {
         if (
+            // (board[0] === player && board[1] === player && board[2] === player) ||
+            // (board[3] === player && board[4] === player && board[5] === player) ||
+            // (board[6] === player && board[7] === player && board[8] === player) ||
+            // (board[0] === player && board[3] === player && board[6] === player) ||
+            // (board[1] === player && board[4] === player && board[7] === player) ||
+            // (board[2] === player && board[5] === player && board[8] === player) ||
+            // (board[0] === player && board[4] === player && board[8] === player) ||
+            // (board[2] === player && board[4] === player && board[6] === player)
+
             (board[0] === player && board[1] === player && board[2] === player && board[3] === player && board[4] === player) ||
             (board[5] === player && board[6] === player && board[7] === player && board[8] === player && board[9] === player) ||
             (board[10] === player && board[11] === player && board[12] === player && board[13] === player && board[14] === player) ||
@@ -87,7 +102,8 @@ export default class App extends Component {
     findAiMove(board) {
         var bestMoveScore = 100;
         var move = null;
-
+        var alpha = 100;
+        var beta = -100;
         //test all possible move if game is not over
         if (this.winner(board, 'x') || this.winner(board, 'o') || this.tie(board)) {
             return null;
@@ -95,7 +111,7 @@ export default class App extends Component {
         for(var i = 0 ; i < board.length ; i++){
             var newBoard = this.validMove(i, this.state.minPlayer,board);
                 if(newBoard){
-                    var moveScore =this.maxScore(newBoard);
+                    var moveScore = this.maxScore(newBoard,alpha,beta);
                     if(moveScore < bestMoveScore){
                         bestMoveScore = moveScore;
                         move = i;
@@ -105,7 +121,7 @@ export default class App extends Component {
         return move;
     }
 
-    minScore(board){
+    minScore(board,alpha,beta){
         if(this.winner(board,'x')){
             return 10;
         }else if(this.winner(board, 'o')){
@@ -117,10 +133,18 @@ export default class App extends Component {
             for(var i=0 ; i < board.length ; i++){
                 var newBoard = this.validMove(i, this.state.minPlayer, board);
                 if(newBoard){
-                    var predictedMoveScore =this.maxScore(newBoard);
+                    console.log("minScore",newBoard);
+                    var predictedMoveScore = this.maxScore(newBoard,alpha,beta);
                     if(predictedMoveScore < bestMoveScore){
                         bestMoveScore = predictedMoveScore;
 
+                    }
+
+                    if(bestMoveScore < alpha){
+                        return bestMoveScore;
+                    }
+                    if(bestMoveScore < beta ){
+                        beta = bestMoveScore;
                     }
                 }
             }
@@ -129,7 +153,7 @@ export default class App extends Component {
     }
 
 
-    maxScore(board){
+    maxScore(board,alpha,beta){
         if(this.winner(board,'x')){
             return 10;
         }else if(this.winner(board, 'o')){
@@ -141,14 +165,22 @@ export default class App extends Component {
             for(var i=0 ; i < board.length ; i++){
                 var newBoard = this.validMove(i, this.state.maxPlayer, board);
                 if(newBoard){
-                    var predictedMoveScore =this.minScore(newBoard);
+                    console.log("maxScore",newBoard);
+                    var predictedMoveScore = this.minScore(newBoard,alpha,beta);
                     if(predictedMoveScore > bestMoveScore){
                         bestMoveScore = predictedMoveScore;
 
                     }
+                    if(bestMoveScore > beta){
+                        return bestMoveScore;
+                    }
+                    if (bestMoveScore < alpha){
+                        alpha = bestMoveScore;
+                    }
                 }
             }
         }
+
         return bestMoveScore;
     }
 
