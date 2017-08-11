@@ -100,10 +100,10 @@ export default class App extends Component {
     }
 
     findAiMove(board) {
-        var bestMoveScore = 100;
+        var bestMoveScore = 9999;
         var move = null;
-        var alpha = 100;
-        var beta = -100;
+        var alpha = 9999;
+        var beta = -9999;
         //test all possible move if game is not over
         if (this.winner(board, 'x') || this.winner(board, 'o') || this.tie(board)) {
             return null;
@@ -112,12 +112,10 @@ export default class App extends Component {
             var newBoard = this.validMove(i, this.state.minPlayer,board);
             if(newBoard){
                 var moveScore = this.minScore(newBoard,alpha,beta);
-                console.log("ALPHA ",alpha);
-                console.log("BETA ",beta);
-                if(moveScore <  bestMoveScore || moveScore < alpha){
+                if(moveScore <  alpha || moveScore > beta){
+                    beta = moveScore;
                     alpha = moveScore;
-                    bestMoveScore = moveScore;
-                    console.log("move score/ alpha value", moveScore);
+                    console.log("move score/ beta value", moveScore);
                     move = i;
                 }
             }
@@ -126,11 +124,11 @@ export default class App extends Component {
     }
 
     minScore(board,alpha,beta){
-        var moves = board.join('').replace(/ /g, '');
+        // var moves = board.join('').replace(/ /g, '');
         if(this.winner(board,'x')){
-            return 10 + moves.length;
+            return 20;
         }else if(this.winner(board, 'o')){
-            return -10;
+            return -45;
         }else if(this.tie(board)){
             return 0;
         } else {
@@ -146,10 +144,10 @@ export default class App extends Component {
 
                     }
 
-                    // if(bestMoveScore < alpha){
-                    //     console.log("minScore",bestMoveScore);
-                    //     return bestMoveScore;
-                    // }
+                    if(bestMoveScore < alpha){
+                        console.log("minScore",bestMoveScore);
+                        return bestMoveScore;
+                    }
                     if(bestMoveScore < beta ){
                         beta = bestMoveScore;
                     }
@@ -158,16 +156,16 @@ export default class App extends Component {
                 }
             }
         }
-        return beta;
+        return bestMoveScore;
     }
 
 
     maxScore(board,alpha,beta){
-        var moves = board.join('').replace(/ /g, '');
+        // var moves = board.join('').replace(/ /g, '');
         if(this.winner(board,'x')){
-            return 10 + moves.length;
+            return 20;
         }else if(this.winner(board, 'o')){
-            return -10;
+            return -45;
         }else if(this.tie(board)){
             return 0;
         } else {
@@ -178,14 +176,13 @@ export default class App extends Component {
 
                     var predictedMoveScore = this.minScore(newBoard,alpha,beta);
                     if(predictedMoveScore > bestMoveScore){
-
                         bestMoveScore = predictedMoveScore;
-
                     }
-                    // if(bestMoveScore > beta){
-                    //     console.log("maxScore",bestMoveScore);
-                    //     return bestMoveScore;
-                    // }
+
+                    if(bestMoveScore > beta){
+                        console.log("maxScore",bestMoveScore);
+                        return bestMoveScore;
+                    }
                     if (bestMoveScore > alpha){
                         alpha = bestMoveScore;
                     }
@@ -194,7 +191,7 @@ export default class App extends Component {
             }
         }
 
-        return alpha;
+        return bestMoveScore;
     }
 
 
