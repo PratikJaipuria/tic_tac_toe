@@ -58,26 +58,26 @@ export default class App extends Component {
     winner(board,player) {
         if (
             // (board[0] === player && board[1] === player && board[2] === player) ||
-            // (board[3] === player && board[4] === player && board[5] === player) ||
-            // (board[6] === player && board[7] === player && board[8] === player) ||
-            // (board[0] === player && board[3] === player && board[6] === player) ||
-            // (board[1] === player && board[4] === player && board[7] === player) ||
-            // (board[2] === player && board[5] === player && board[8] === player) ||
-            // (board[0] === player && board[4] === player && board[8] === player) ||
-            // (board[2] === player && board[4] === player && board[6] === player)
+        // (board[3] === player && board[4] === player && board[5] === player) ||
+        // (board[6] === player && board[7] === player && board[8] === player) ||
+        // (board[0] === player && board[3] === player && board[6] === player) ||
+        // (board[1] === player && board[4] === player && board[7] === player) ||
+        // (board[2] === player && board[5] === player && board[8] === player) ||
+        // (board[0] === player && board[4] === player && board[8] === player) ||
+        // (board[2] === player && board[4] === player && board[6] === player)
 
-            (board[0] === player && board[1] === player && board[2] === player && board[3] === player && board[4] === player) ||
-            (board[5] === player && board[6] === player && board[7] === player && board[8] === player && board[9] === player) ||
-            (board[10] === player && board[11] === player && board[12] === player && board[13] === player && board[14] === player) ||
-            (board[15] === player && board[16] === player && board[17] === player && board[18] === player && board[19] === player) ||
-            (board[20] === player && board[21] === player && board[22] === player && board[23] === player && board[24] === player) ||
-            (board[0] === player && board[5] === player && board[10] === player && board[15] === player && board[20] === player) ||
-            (board[1] === player && board[6] === player && board[11] === player && board[16] === player && board[21] === player) ||
-            (board[2] === player && board[7] === player && board[12] === player && board[17] === player && board[22] === player) ||
-            (board[3] === player && board[8] === player && board[13] === player && board[18] === player && board[23] === player) ||
-            (board[4] === player && board[9] === player && board[14] === player && board[19] === player && board[24] === player) ||
-            (board[0] === player && board[6] === player && board[12] === player && board[18] === player && board[24] === player) ||
-            (board[4] === player && board[8] === player && board[12] === player && board[16] === player && board[20] === player)
+        (board[0] === player && board[1] === player && board[2] === player && board[3] === player && board[4] === player) ||
+        (board[5] === player && board[6] === player && board[7] === player && board[8] === player && board[9] === player) ||
+        (board[10] === player && board[11] === player && board[12] === player && board[13] === player && board[14] === player) ||
+        (board[15] === player && board[16] === player && board[17] === player && board[18] === player && board[19] === player) ||
+        (board[20] === player && board[21] === player && board[22] === player && board[23] === player && board[24] === player) ||
+        (board[0] === player && board[5] === player && board[10] === player && board[15] === player && board[20] === player) ||
+        (board[1] === player && board[6] === player && board[11] === player && board[16] === player && board[21] === player) ||
+        (board[2] === player && board[7] === player && board[12] === player && board[17] === player && board[22] === player) ||
+        (board[3] === player && board[8] === player && board[13] === player && board[18] === player && board[23] === player) ||
+        (board[4] === player && board[9] === player && board[14] === player && board[19] === player && board[24] === player) ||
+        (board[0] === player && board[6] === player && board[12] === player && board[18] === player && board[24] === player) ||
+        (board[4] === player && board[8] === player && board[12] === player && board[16] === player && board[20] === player)
         ) {
             return true;
         } else {
@@ -110,20 +110,25 @@ export default class App extends Component {
         }
         for(var i = 0 ; i < board.length ; i++){
             var newBoard = this.validMove(i, this.state.minPlayer,board);
-                if(newBoard){
-                    var moveScore = this.maxScore(newBoard,alpha,beta);
-                    if(moveScore < bestMoveScore){
-                        bestMoveScore = moveScore;
-                        move = i;
-                    }
+            if(newBoard){
+                var moveScore = this.minScore(newBoard,alpha,beta);
+                console.log("ALPHA ",alpha);
+                console.log("BETA ",beta);
+                if(moveScore <  bestMoveScore || moveScore < alpha){
+                    alpha = moveScore;
+                    bestMoveScore = moveScore;
+                    console.log("move score/ alpha value", moveScore);
+                    move = i;
                 }
+            }
         }
         return move;
     }
 
     minScore(board,alpha,beta){
+        var moves = board.join('').replace(/ /g, '');
         if(this.winner(board,'x')){
-            return 10;
+            return 10 + moves.length;
         }else if(this.winner(board, 'o')){
             return -10;
         }else if(this.tie(board)){
@@ -133,29 +138,34 @@ export default class App extends Component {
             for(var i=0 ; i < board.length ; i++){
                 var newBoard = this.validMove(i, this.state.minPlayer, board);
                 if(newBoard){
-                    console.log("minScore",newBoard);
+
                     var predictedMoveScore = this.maxScore(newBoard,alpha,beta);
+
                     if(predictedMoveScore < bestMoveScore){
                         bestMoveScore = predictedMoveScore;
 
                     }
 
-                    if(bestMoveScore < alpha){
-                        return bestMoveScore;
-                    }
+                    // if(bestMoveScore < alpha){
+                    //     console.log("minScore",bestMoveScore);
+                    //     return bestMoveScore;
+                    // }
                     if(bestMoveScore < beta ){
                         beta = bestMoveScore;
                     }
+
+                    if (beta <= alpha) { break;}
                 }
             }
         }
-        return bestMoveScore;
+        return beta;
     }
 
 
     maxScore(board,alpha,beta){
+        var moves = board.join('').replace(/ /g, '');
         if(this.winner(board,'x')){
-            return 10;
+            return 10 + moves.length;
         }else if(this.winner(board, 'o')){
             return -10;
         }else if(this.tie(board)){
@@ -165,23 +175,26 @@ export default class App extends Component {
             for(var i=0 ; i < board.length ; i++){
                 var newBoard = this.validMove(i, this.state.maxPlayer, board);
                 if(newBoard){
-                    console.log("maxScore",newBoard);
+
                     var predictedMoveScore = this.minScore(newBoard,alpha,beta);
                     if(predictedMoveScore > bestMoveScore){
+
                         bestMoveScore = predictedMoveScore;
 
                     }
-                    if(bestMoveScore > beta){
-                        return bestMoveScore;
-                    }
-                    if (bestMoveScore < alpha){
+                    // if(bestMoveScore > beta){
+                    //     console.log("maxScore",bestMoveScore);
+                    //     return bestMoveScore;
+                    // }
+                    if (bestMoveScore > alpha){
                         alpha = bestMoveScore;
                     }
+                    if (beta <= alpha) { break;}
                 }
             }
         }
 
-        return bestMoveScore;
+        return alpha;
     }
 
 
@@ -189,10 +202,10 @@ export default class App extends Component {
         var player = this.state.turn;
         var currentGameBoard = this.validMove(move,player,this.state.gameBoard);
         if(this.winner(currentGameBoard,player)){
-          this.setState({
-              gameBoard : currentGameBoard,
-              winner: player,
-          });
+            this.setState({
+                gameBoard : currentGameBoard,
+                winner: player,
+            });
             return;
         }
         if(this.tie(currentGameBoard)){
