@@ -111,9 +111,9 @@ export default class App extends Component {
         for(var i = 0 ; i < board.length ; i++){
             var newBoard = this.validMove(i, this.state.minPlayer,board);
             if(newBoard){
-                var moveScore = this.minScore(newBoard,alpha,beta);
-                if(moveScore <  alpha || moveScore > beta){
-                    beta = moveScore;
+                var moveScore = this.maxScore(newBoard,alpha,beta);
+                if(moveScore <  alpha){
+                    // beta = moveScore;
                     alpha = moveScore;
                     console.log("move score/ beta value", moveScore);
                     move = i;
